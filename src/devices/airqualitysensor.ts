@@ -396,7 +396,8 @@ export class AirQualitySensor extends deviceBase {
         aqicn: `${AqicnUrl}${AqicnCurrentObservationBy}${AqicnCurrentObservationBy ? '/' : ''}?token=${this.device.apiKey}`,
       }
       const url = providerUrls[this.device.provider]
-      await this.debugSuccessLog(`url: ${JSON.stringify(url)}`)
+      // Do not log `url`: it includes API_KEY / token. The Matter poller
+      // never logs the request URL for the same reason.
       if (url) {
         const { body, statusCode, headers } = await this.executeApiRequestWithFallback(url)
 
@@ -425,7 +426,6 @@ export class AirQualitySensor extends deviceBase {
 
                 // Build new URL with zip code
                 const fallbackUrl = `${AirNowUrl}current/ziplatlong/?format=application/json&zipCode=${geoData.zipCode}&API_KEY=${this.device.apiKey}`
-                await this.debugLog(`Fallback URL: ${fallbackUrl}`)
 
                 try {
                   const fallbackResponse = await this.executeApiRequestWithFallback(fallbackUrl)
